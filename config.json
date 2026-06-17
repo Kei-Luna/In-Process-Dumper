@@ -1,0 +1,12 @@
+{
+  "dump_dir": "",
+  "dump_name": "",
+  "exe_name": "",
+  "log_name": "",
+  "dump_flags": "0x00001026",
+  "write_exe": true,
+  "dump_modules": true,
+  "aggressive_read": true,
+  "dump_exec_regions": true,
+  "unload": true
+}
