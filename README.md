@@ -66,7 +66,7 @@ Example:
 ```
 
 | Config key | Environment override | Description |
-| --- | --- |
+| --- | --- | --- |
 | `dump_dir` | `IPD_DUMP_DIR` | Directory for generated dump files. Defaults to the directory containing `InProcessDumper.dll`. |
 | `dump_name` | `IPD_DUMP_NAME` | Full dump file path. If set, this overrides `dump_dir`. |
 | `exe_name` | `IPD_EXE_NAME` | Full reconstructed EXE path. Defaults to `<process>_dump.exe`. |
