@@ -3,6 +3,7 @@
   "dump_name": "",
   "exe_name": "",
   "log_name": "",
+  "dump_delay_seconds": 0,
   "dump_flags": "0x00001026",
   "write_exe": true,
   "dump_modules": true,
