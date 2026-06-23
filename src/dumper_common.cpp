@@ -594,5 +594,9 @@ bool ShouldDumpModules() {
     return ParseBoolSetting(GetSettingString(L"IPD_DUMP_MODULES", L"dump_modules"), true);
 }
 
+bool ShouldDumpUnityMetadata() {
+    return ParseBoolSetting(GetSettingString(L"IPD_DUMP_UNITY_METADATA", L"dump_unity_metadata"), true);
+}
+
 }  // namespace ipd
 

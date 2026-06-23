@@ -59,6 +59,7 @@ Example:
   "dump_flags": "0x00001026",
   "write_exe": true,
   "dump_modules": true,
+  "dump_unity_metadata": true,
   "aggressive_read": true,
   "dump_exec_regions": true,
   "unload": true
@@ -72,6 +73,7 @@ Example:
 | `exe_name` | `IPD_EXE_NAME` | Full reconstructed EXE path. Defaults to `<process>_dump.exe`. |
 | `write_exe` | `IPD_WRITE_EXE` | Set to `false` to skip reconstructed EXE output. Defaults to enabled. |
 | `dump_modules` | `IPD_DUMP_MODULES` | Set to `true` to reconstruct loaded DLL modules to `<process>_dump.modules\*_dump.dll`. Defaults to enabled. |
+| `dump_unity_metadata` | `IPD_DUMP_UNITY_METADATA` | Set to `true` to scan memory for Unity IL2CPP `global-metadata.dat` and write it to `<process>_dump.unity_metadata\global-metadata_dump.dat`. Defaults to enabled. |
 | `aggressive_read` | `IPD_AGGRESSIVE_READ` | Set to `true` to temporarily change committed unreadable page protections while reconstructing the EXE and loaded DLLs. |
 | `dump_exec_regions` | `IPD_DUMP_EXEC_REGIONS` | Set to `true` to dump executable `MEM_PRIVATE` and `MEM_MAPPED` regions outside the main module to `<process>_dump.exec_regions\*.bin`. |
 | `log_name` | `IPD_LOG_NAME` | Full log file path. Defaults to `<process>_dump.log.txt`. |
@@ -117,3 +119,9 @@ likely outside the original main module image.
 Loaded DLLs are reconstructed from their in-memory `MEM_IMAGE` mappings when
 `dump_modules` is enabled. This is useful when tools such as IDA ask for imported
 DLLs while analyzing the reconstructed EXE.
+
+Unity IL2CPP metadata is scanned from committed readable memory when
+`dump_unity_metadata` is enabled. Candidates are validated with the
+`global-metadata.dat` magic, metadata version, and header offset/size table
+before being written. If the metadata spans protected pages, `aggressive_read`
+can temporarily relax protections and retry the read.

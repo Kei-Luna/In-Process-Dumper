@@ -45,6 +45,7 @@ bool ShouldWriteReconstructedExe();
 bool ShouldAggressivelyReadMemory();
 bool ShouldDumpExecutableRegions();
 bool ShouldDumpModules();
+bool ShouldDumpUnityMetadata();
 
 std::wstring BuildDumpPath();
 std::wstring BuildLogPath(const std::wstring& dumpPath);
@@ -70,6 +71,7 @@ bool WriteReconstructedExe(
 
 void DumpExecutableRegions(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
 void DumpLoadedModules(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
+void DumpUnityMetadata(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
 
 DumpContext CreateDumpContext();
 DWORD RunDumpWorkflow(

@@ -181,6 +181,10 @@ DWORD RunDumpWorkflow(
         DumpLoadedModules(context.dumpPath, context.logPath, context.aggressiveRead);
     }
 
+    if (ShouldDumpUnityMetadata()) {
+        DumpUnityMetadata(context.dumpPath, context.logPath, context.aggressiveRead);
+    }
+
     WriteStatusFile(context.dumpPath, dumpError, context.exePath, exeError);
     if (logStatusPath) {
         Log(context.logPath, L"status_path=" + BuildStatusPath(context.dumpPath));
