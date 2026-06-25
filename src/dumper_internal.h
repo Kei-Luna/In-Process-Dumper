@@ -35,10 +35,14 @@ std::wstring StripFileExtension(std::wstring path);
 std::wstring ReplaceFileExtension(const std::wstring& path, const wchar_t* extension);
 std::wstring AddSuffixBeforeExtension(const std::wstring& fileName, const std::wstring& suffix);
 std::wstring AddDumpSuffixBeforeExtension(const std::wstring& fileName);
+std::wstring BuildSidecarDirectory(const std::wstring& dumpPath, const wchar_t* suffix);
+std::wstring BuildUniqueFilePath(const std::wstring& directory, const std::wstring& fileName);
 
 DWORD AlignUp(DWORD value, DWORD alignment);
 DWORD ParseDumpFlags();
 DWORD ParseDumpDelaySeconds();
+bool IsReadableMemory(const MEMORY_BASIC_INFORMATION& mbi);
+bool ReadMemoryBlock(const BYTE* source, void* buffer, DWORD size, bool aggressiveRead, SIZE_T* bytesRead);
 
 bool ShouldUnload();
 bool ShouldWriteReconstructedExe();
@@ -65,6 +69,14 @@ bool WriteReconstructedImage(
 bool WriteReconstructedExe(
     const std::wstring& exePath,
     const std::wstring& logPath,
+    bool aggressiveRead,
+    ReconstructionStats* stats,
+    DWORD* error);
+bool WriteImageMemoryAt(
+    HANDLE file,
+    DWORD fileOffset,
+    const BYTE* source,
+    DWORD size,
     bool aggressiveRead,
     ReconstructionStats* stats,
     DWORD* error);

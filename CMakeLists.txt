@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 3.20)
 project(InProcessDumper LANGUAGES CXX)
 
 add_library(InProcessDumper SHARED
-    src/dump_workflow.cpp
-    src/dumper_common.cpp
-    src/dumper.cpp
-    src/pe_reconstruction.cpp
+    src/common/dumper_common.cpp
+    src/entry/dumper.cpp
+    src/game/unity/unity_metadata.cpp
+    src/pe/pe_reconstruction.cpp
+    src/workflow/dump_workflow.cpp
 )
 
 target_compile_features(InProcessDumper PRIVATE cxx_std_17)
+target_include_directories(InProcessDumper PRIVATE src)
 target_compile_definitions(InProcessDumper PRIVATE
     WIN32_LEAN_AND_MEAN
     NOMINMAX
