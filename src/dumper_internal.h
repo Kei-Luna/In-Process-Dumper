@@ -41,6 +41,7 @@ std::wstring BuildUniqueFilePath(const std::wstring& directory, const std::wstri
 DWORD AlignUp(DWORD value, DWORD alignment);
 DWORD ParseDumpFlags();
 DWORD ParseDumpDelaySeconds();
+DWORD ParseUnityMetadataScanSeconds();
 bool IsReadableMemory(const MEMORY_BASIC_INFORMATION& mbi);
 bool ReadMemoryBlock(const BYTE* source, void* buffer, DWORD size, bool aggressiveRead, SIZE_T* bytesRead);
 
@@ -50,6 +51,8 @@ bool ShouldAggressivelyReadMemory();
 bool ShouldDumpExecutableRegions();
 bool ShouldDumpModules();
 bool ShouldDumpUnityMetadata();
+bool ShouldWatchUnityMetadataFile();
+bool ShouldInlineWatchUnityMetadataFile();
 
 std::wstring BuildDumpPath();
 std::wstring BuildLogPath(const std::wstring& dumpPath);
@@ -83,7 +86,10 @@ bool WriteImageMemoryAt(
 
 void DumpExecutableRegions(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
 void DumpLoadedModules(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
-void DumpUnityMetadata(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
+DWORD DumpUnityMetadata(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
+void InstallUnityMetadataFileWatch(const std::wstring& logPath);
+void RefreshUnityMetadataFileWatch(const std::wstring& logPath);
+DWORD DumpWatchedUnityMetadataBuffers(const std::wstring& dumpPath, const std::wstring& logPath, bool aggressiveRead);
 
 DumpContext CreateDumpContext();
 DWORD RunDumpWorkflow(

@@ -4,10 +4,13 @@
   "exe_name": "",
   "log_name": "",
   "dump_delay_seconds": 0,
+  "unity_metadata_scan_seconds": 15,
   "dump_flags": "0x00001026",
   "write_exe": true,
   "dump_modules": true,
   "dump_unity_metadata": true,
+  "watch_unity_metadata_file": true,
+  "inline_watch_unity_metadata_file": false,
   "aggressive_read": true,
   "dump_exec_regions": true,
   "unload": true

@@ -155,6 +155,56 @@ DWORD WriteConfiguredExe(const DumpContext& context) {
     return exeError;
 }
 
+void ScanUnityMetadataWindow(const DumpContext& context) {
+    if (ShouldWatchUnityMetadataFile()) {
+        InstallUnityMetadataFileWatch(context.logPath);
+    }
+
+    DWORD scanSeconds = ParseUnityMetadataScanSeconds();
+    if (ShouldWatchUnityMetadataFile() && scanSeconds != 0) {
+        ULONGLONG watchDeadline = GetTickCount64() + (static_cast<ULONGLONG>(scanSeconds) * 1000);
+        DWORD watchAttempt = 0;
+        do {
+            ++watchAttempt;
+            RefreshUnityMetadataFileWatch(context.logPath);
+            if (DumpWatchedUnityMetadataBuffers(context.dumpPath, context.logPath, context.aggressiveRead) != 0) {
+                return;
+            }
+
+            if ((watchAttempt % 20) == 0) {
+                Log(context.logPath, L"Unity metadata watch polling attempt=" + std::to_wstring(watchAttempt));
+            }
+
+            Sleep(250);
+        } while (GetTickCount64() < watchDeadline);
+    }
+
+    ULONGLONG deadline = GetTickCount64() + (static_cast<ULONGLONG>(scanSeconds) * 1000);
+    DWORD attempt = 0;
+
+    do {
+        ++attempt;
+        Log(context.logPath, L"Unity metadata scan attempt=" + std::to_wstring(attempt));
+        if (ShouldWatchUnityMetadataFile()) {
+            RefreshUnityMetadataFileWatch(context.logPath);
+        }
+
+        if (ShouldWatchUnityMetadataFile() &&
+            DumpWatchedUnityMetadataBuffers(context.dumpPath, context.logPath, context.aggressiveRead) != 0) {
+            return;
+        }
+
+        if (DumpUnityMetadata(context.dumpPath, context.logPath, context.aggressiveRead) != 0) {
+            return;
+        }
+        if (scanSeconds == 0 || GetTickCount64() >= deadline) {
+            break;
+        }
+
+        Sleep(500);
+    } while (true);
+}
+
 DWORD RunDumpWorkflow(
     const DumpContext& context,
     const wchar_t* startMessage,
@@ -170,6 +220,10 @@ DWORD RunDumpWorkflow(
         Sleep(delaySeconds * 1000);
     }
 
+    if (ShouldDumpUnityMetadata()) {
+        ScanUnityMetadataWindow(context);
+    }
+
     DWORD dumpError = WriteConfiguredDump(context);
     DWORD exeError = WriteConfiguredExe(context);
 
@@ -179,10 +233,6 @@ DWORD RunDumpWorkflow(
 
     if (ShouldDumpModules()) {
         DumpLoadedModules(context.dumpPath, context.logPath, context.aggressiveRead);
-    }
-
-    if (ShouldDumpUnityMetadata()) {
-        DumpUnityMetadata(context.dumpPath, context.logPath, context.aggressiveRead);
     }
 
     WriteStatusFile(context.dumpPath, dumpError, context.exePath, exeError);

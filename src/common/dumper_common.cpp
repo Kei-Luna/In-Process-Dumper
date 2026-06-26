@@ -574,6 +574,26 @@ DWORD ParseDumpDelaySeconds() {
     return static_cast<DWORD>(seconds);
 }
 
+DWORD ParseUnityMetadataScanSeconds() {
+    std::wstring value = GetSettingString(L"IPD_UNITY_METADATA_SCAN_SECONDS", L"unity_metadata_scan_seconds");
+    if (value.empty()) {
+        return 15;
+    }
+
+    wchar_t* end = nullptr;
+    unsigned long seconds = wcstoul(value.c_str(), &end, 0);
+    if (end == value.c_str()) {
+        return 15;
+    }
+
+    constexpr unsigned long kMaxScanSeconds = 120;
+    if (seconds > kMaxScanSeconds) {
+        return kMaxScanSeconds;
+    }
+
+    return static_cast<DWORD>(seconds);
+}
+
 bool ShouldUnload() {
     return ParseBoolSetting(GetSettingString(L"IPD_UNLOAD", L"unload"), true);
 }
@@ -596,6 +616,14 @@ bool ShouldDumpModules() {
 
 bool ShouldDumpUnityMetadata() {
     return ParseBoolSetting(GetSettingString(L"IPD_DUMP_UNITY_METADATA", L"dump_unity_metadata"), true);
+}
+
+bool ShouldWatchUnityMetadataFile() {
+    return ParseBoolSetting(GetSettingString(L"IPD_WATCH_UNITY_METADATA_FILE", L"watch_unity_metadata_file"), false);
+}
+
+bool ShouldInlineWatchUnityMetadataFile() {
+    return ParseBoolSetting(GetSettingString(L"IPD_INLINE_WATCH_UNITY_METADATA_FILE", L"inline_watch_unity_metadata_file"), false);
 }
 
 }  // namespace ipd

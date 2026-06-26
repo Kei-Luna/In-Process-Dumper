@@ -5,6 +5,7 @@ project(InProcessDumper LANGUAGES CXX)
 add_library(InProcessDumper SHARED
     src/common/dumper_common.cpp
     src/entry/dumper.cpp
+    src/game/unity/metadata_file_watch.cpp
     src/game/unity/unity_metadata.cpp
     src/pe/pe_reconstruction.cpp
     src/workflow/dump_workflow.cpp
